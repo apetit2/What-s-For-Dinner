@@ -1,0 +1,19 @@
+{
+  "name": "mobileserver",
+  "version": "1.0.0",
+  "description": "A server to host the final project for mobile and ubiquitous ",
+  "main": "server.js",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "dotenv": "^4.0.0",
+    "express": "^4.16.2",
+    "request": "^2.83.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
