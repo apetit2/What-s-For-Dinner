@@ -1,20 +1,35 @@
+const dotenv = require('dotenv').load();
 const apiKey = process.env.API_KEY;
 const request = require('request');
 
 /**
- * 
+ * Essentially looks up a list of recipes from the rest api given the list of ingredients
+ * @method initialize
+ * @param {String} ingredients JSON string of ingredients we want to look up
+ * @param {Object} res Response Object
+ * @param {Object} req Request Object
  */
 
 function initialize(ingredients, res, req) {
-    var i = ingredients;
+    //check to make sure some ingredients were actually entered, otherwise we don't need to look up
 
-    console.log(apiKey);
+    var urlBaseString = 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?fillIngredients=false&ingredients=';
 
+    //go through the list of ingredients and add them to the url
+    for (var i = 0; i < ingredients.length; i++){
+        if(i < ingredients.length - 1) {
+            urlBaseString = urlBaseString + ingredients[i] + '%2C'
+        } else {
+            urlBaseString = urlBaseString + ingredients[i]
+        }
+    }
+
+    urlBaseString = urlBaseString + '&limitLicense=false&number=10&ranking=1';
+
+    console.log(urlBaseString);
     //send request to API
     var options = {
-        url: 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/'
-        + 'recipes/findByIngredients?fillIngredients=false&ingredients=apples%' +
-        '2Cflour%2Csugar&limitLicense=false&number=5&ranking=1',
+        url: urlBaseString,
         headers: {
             'X-Mashape-Key': apiKey,
             'Accept': 'application/json'
@@ -36,7 +51,10 @@ function initialize(ingredients, res, req) {
 }
 
 /**
- * 
+ * Exports this post request to the index.js
+ * @method ingredients 
+ * @param {Object} req Request Object
+ * @param {Object} res Response Object
  */
 
 module.exports = (req, res) => {
