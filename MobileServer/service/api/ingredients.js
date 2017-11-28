@@ -34,7 +34,7 @@ function initialize(ingredients, res, req) {
             'X-Mashape-Key': apiKey,
             'Accept': 'application/json'
         }
-    }
+    };
 
     return new Promise((resolve, reject) => {
         //async job

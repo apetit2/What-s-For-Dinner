@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const api = require('./api/index');
+const data = require('./data/index');
 
 //=============================================
 //=============CORS MIDDLEWARE=================
@@ -14,6 +15,7 @@ router.use((req,res,next)=>{
 
 //Attach all routes that under / here (excluding static files)
 
-router.use('/api', api)
+router.use('/api', api);
+router.use('/data', data);
 
 module.exports = router;
