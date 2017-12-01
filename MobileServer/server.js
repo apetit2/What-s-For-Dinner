@@ -1,7 +1,17 @@
+const admin = require('firebase-admin');
+const serviceAccount = require('./file.json');
+const dotenv = require('dotenv').load();
+const dataURL = process.env.DATABASE_URL;
+
+//initialize firebase
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: dataURL
+});
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const service = require('./service/index');
-const dotenv = require('dotenv').load();
 
 //initialize express
 const app = express();

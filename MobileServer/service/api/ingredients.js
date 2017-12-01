@@ -1,6 +1,14 @@
 const dotenv = require('dotenv').load();
 const apiKey = process.env.API_KEY;
+const dataURL = process.env.DATABASE_URL;
 const request = require('request');
+const admin = require('firebase-admin');
+const serviceAccount = require('../../file.json');
+
+var defaultAuth = admin.auth();
+var defaultDatabase = admin.database();
+
+var ref = defaultDatabase.ref();
 
 /**
  * Essentially looks up a list of recipes from the rest api given the list of ingredients
@@ -43,6 +51,14 @@ function initialize(ingredients, res, req) {
                 res.status(500).end()
                 reject(err);
             } else {
+
+                //replace the below code with any data transaction we deem necessary
+                var menu = JSON.parse(body);
+                for(var i = 0; i < menu.length; i++){
+                    ref.child(menu[i].title).child("ingredients").set(JSON.stringify({}));
+                    ref.child(menu[i].title).child("id").set(menu[i].id.toString());
+                }
+
                 res.status(200).send(JSON.parse(body));
                 resolve(JSON.parse(body));
             }
