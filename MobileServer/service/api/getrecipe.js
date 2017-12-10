@@ -46,7 +46,6 @@ function initialize(id, req, res){
                 }
 
                 ref.child(title).child("ingredients").set(JSON.stringify(toInsert));
-
                 res.status(200).send(instructions);
                 resolve(JSON.parse(body));
             }

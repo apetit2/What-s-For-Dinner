@@ -1,6 +1,7 @@
 const admin = require('firebase-admin');
 const serviceAccount = require('./file.json');
 const dotenv = require('dotenv').load();
+const ip = require('ip');
 const dataURL = process.env.DATABASE_URL;
 
 //initialize firebase
@@ -36,5 +37,5 @@ app.use('/service', service);
 
 //START SERVER
 app.listen(PORT, ()=>{
-    console.log("Server listening on port: %s", PORT);
+    console.log("Server listening at %s on Port: %s", ip.address(), PORT);
 });
