@@ -18,7 +18,7 @@ const service = require('./service/index');
 const app = express();
 
 //Get the port number
-const PORT = process.env.PORT || process.env.PORT_NUMBER
+const PORT = process.env.PORT
 
 //Support json encoded bodies and support encoded bodies
 app.use(bodyParser.json());

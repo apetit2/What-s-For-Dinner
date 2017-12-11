@@ -32,7 +32,7 @@ public class RestCalls {
             HttpPost post = new HttpPost(this.url + "/service/api/ingredients");
             HttpClient httpclient = HttpClientBuilder.create().build();
 
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(); //add size to arraylist
+            List<NameValuePair> nameValuePairs = new ArrayList<>(); //add size to arraylist
 
             for(String ingredient: ingredients){
                 nameValuePairs.add(new BasicNameValuePair("ingredients[]", ingredient));
@@ -53,6 +53,40 @@ public class RestCalls {
 
                 return jsonObject;
             }
+        } catch (IOException e){
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public JSONArray getRecipe(int id) {
+        try {
+            HttpPost post = new HttpPost(this.url + "/service/api/recipe");
+            HttpClient httpClient = HttpClientBuilder.create().build();
+
+            List<NameValuePair> nameValuePairs = new ArrayList<>();
+
+            nameValuePairs.add(new BasicNameValuePair("id", "" + id));
+
+            post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+            HttpResponse response = httpClient.execute(post);
+
+            int status = response.getStatusLine().getStatusCode();
+
+            if(status == 200){
+                HttpEntity entity = response.getEntity();
+                String data = EntityUtils.toString(entity);
+                System.out.println(data);
+
+                JSONArray jsonObject = new JSONArray(data);
+
+                return jsonObject;
+            }
+
         } catch (IOException e){
             e.printStackTrace();
         } catch (JSONException e) {

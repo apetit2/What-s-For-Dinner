@@ -1,10 +1,12 @@
 package wpi.whatsfordinner;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -56,6 +58,8 @@ public class RecipeActivity extends AppCompatActivity {
     private class RecipeHolder extends RecyclerView.ViewHolder {
 
         private TextView textView;
+        private int id;
+        private String imagePath;
 
         /**
          * Initializes the holder
@@ -74,8 +78,9 @@ public class RecipeActivity extends AppCompatActivity {
         public void bind(String label) throws JSONException {
             JSONObject jsonObject = new JSONObject(label);
             String recipeName = jsonObject.getString("title");
-            int id = jsonObject.getInt("id");
-            System.out.println(id);
+            id = jsonObject.getInt("id");
+            imagePath = jsonObject.getString("image");
+
             textView.setText(recipeName);
         }
     }
@@ -113,13 +118,27 @@ public class RecipeActivity extends AppCompatActivity {
          * @param i
          */
         @Override
-        public void onBindViewHolder(RecipeHolder holder, int i){
+        public void onBindViewHolder(final RecipeHolder holder, int i){
             String label = adapterRecipes.get(i);
             try {
                 holder.bind(label);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+
+            holder.textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v){
+                    System.out.println(holder.id);
+                    System.out.println(holder.imagePath);
+
+                    Intent intent = new Intent(getApplicationContext(), RecipeDisplay.class);
+                    intent.putExtra("id", holder.id);
+                    intent.putExtra("imagePath", holder.imagePath);
+                    intent.putExtra("title", holder.textView.getText());
+                    startActivity(intent);
+                }
+            });
         }
 
         /**
