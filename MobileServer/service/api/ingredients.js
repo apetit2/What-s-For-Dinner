@@ -32,7 +32,7 @@ function initialize(ingredients, res, req) {
         }
     }
 
-    urlBaseString = urlBaseString + '&limitLicense=false&number=10&ranking=1';
+    urlBaseString = urlBaseString + '&limitLicense=false&number=20&ranking=1';
 
     console.log(urlBaseString);
     //send request to API
