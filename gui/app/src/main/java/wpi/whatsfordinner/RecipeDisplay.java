@@ -1,6 +1,5 @@
 package wpi.whatsfordinner;
 
-import android.app.ActionBar;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
@@ -55,6 +54,7 @@ public class RecipeDisplay extends AppCompatActivity {
     private String time;
     private PopupWindow popUpWindow;
     private FrameLayout frameLayout;
+    private RestCalls restCalls = new RestCalls();
 
     @Override
     public void onCreate(Bundle onSavedInstanceState) {
@@ -97,7 +97,7 @@ public class RecipeDisplay extends AppCompatActivity {
         }
 
         //check to see if we already put this recipe in our database
-        String check = RestCalls.checkDatabaseFirst(title);
+        String check = restCalls.checkDatabaseFirst(title);
         System.out.println(check);
 
         //initializes a jsonarray, this will hold information on our recipe, received from the server
@@ -117,7 +117,7 @@ public class RecipeDisplay extends AppCompatActivity {
         //and then store it in our database
         if(checkString == null || checkString.equals("null")){
             System.out.println("We do not have the data available to us, need to search it");
-            String data = RestCalls.getRecipe(id);
+            String data = restCalls.getRecipe(id);
             try {
                 JSONObject json = new JSONObject(data);
                 jsonArray = json.getJSONArray("instructions");

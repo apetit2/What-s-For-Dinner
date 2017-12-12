@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private IngredientAdapter iAdapter;
     private ImageButton iButton;
     private Button submitButton;
+    private RestCalls restCalls = new RestCalls();
 
     /**
      * This initializes the main activity
@@ -43,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+
+        RestCalls rest = new RestCalls();
+        rest.getURL();
 
         //disable strictmode
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -92,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                 //reinitialize the list, in case user made a new search
                 listData.clear();
                 //get the results of the restcall response
-                JSONArray object = RestCalls.getIngredients(ings);
+                JSONArray object = restCalls.getIngredients(ings);
 
                 //if the array of JSON objects is not null, lets add it to our list, we will modify this later on
                 if(object != null){

@@ -10,8 +10,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import cz.msebera.android.httpclient.HttpEntity;
 import cz.msebera.android.httpclient.HttpResponse;
@@ -25,19 +27,47 @@ import cz.msebera.android.httpclient.util.EntityUtils;
 
 public class RestCalls {
 
-    public static String url;
+    private String url;
+
+    /**
+     * We want to get the url from the prop file
+     * @return
+     */
+    public String getURL() {
+        InputStream input = getClass().getResourceAsStream("/config.properties");
+        Properties properties;
+        try {
+            properties = new Properties();
+            properties.load(input);
+            String TEST_URL = properties.getProperty("test_url");
+            System.out.println(TEST_URL);
+            String URL = properties.getProperty("url");
+            System.out.println(URL);
+            //Change this line depending upon whether you are testing or launching
+            return TEST_URL;
+            //return URL;
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    //Constructor
+    public RestCalls() {
+        url = getURL();
+    }
 
     /**
      * Gets a list of 20 recipes based upon the ingredients the user gave
      * @param ingredients {String[]} -- a list of all ingredients the user is searching recipes for
      * @return
      */
-    public static JSONArray getIngredients(String[] ingredients) {
-
+    public JSONArray getIngredients(String[] ingredients) {
         //Make a post request to my server to determine 20 recipes that best match the user's search
         try {
             //set up a post request to the url: url + "/service/api/ingredients"
-            HttpPost post = new HttpPost(RestCalls.url + "/service/api/ingredients");
+            HttpPost post = new HttpPost(url + "/service/api/ingredients");
             //set up our httpclient -- this will be used to make the post request
             HttpClient httpclient = HttpClientBuilder.create().build();
 
@@ -81,10 +111,10 @@ public class RestCalls {
      * @param id {int} -- the id of the recipe in the api database
      * @return
      */
-    public static String getRecipe(int id) {
+    public String getRecipe(int id) {
         try {
             //set up a post request for the url - url + '/service/api/recipe'
-            HttpPost post = new HttpPost(RestCalls.url + "/service/api/recipe");
+            HttpPost post = new HttpPost(url + "/service/api/recipe");
             //http client to make the request
             HttpClient httpClient = HttpClientBuilder.create().build();
 
@@ -122,10 +152,10 @@ public class RestCalls {
      * @param title
      * @return
      */
-    public static String checkDatabaseFirst(String title){
+    public String checkDatabaseFirst(String title){
         try {
             //set up the post request with url + /service/data/item
-            HttpPost post = new HttpPost(RestCalls.url + "/service/data/item");
+            HttpPost post = new HttpPost(url + "/service/data/item");
             HttpClient httpClient = HttpClientBuilder.create().build();
 
             //set up request parameters

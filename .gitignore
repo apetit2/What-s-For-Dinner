@@ -1,3 +1,4 @@
 MobileServer/node_modules/
 MobileServer/.env
 MobileServer/file.json
+gui/app/src/main/resources/config.properties
