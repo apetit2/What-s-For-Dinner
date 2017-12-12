@@ -18,7 +18,7 @@ var ref = defaultDatabase.ref();
  */
 function initialize(id, req, res){
 
-    var baseURL = 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/' + id +'/information';
+    var baseURL = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/informationBulk?ids=" + id + "&includeNutrition=false";
 
     //send request to API
     var options = {
@@ -36,18 +36,28 @@ function initialize(id, req, res){
                 res.status(500).end()
                 reject(err);
             } else {
-
-                //replace the below code with any data transaction we deem necessary
-                var instructions = JSON.parse(body).analyzedInstructions;
-                var title = JSON.parse(body).title;
+                var body = JSON.parse(body);
+                console.log(body);
+                var analyzedInstructions = body[0].analyzedInstructions;
+                instructions = [];
+                if(analyzedInstructions.length != 0){
+                    instructions = analyzedInstructions[0].steps;
+                }
+                var readyInMinutes = body[0].readyInMinutes;
+                var time = "Ready in " + readyInMinutes + " minutes";
+                var title = body[0].title;
                 var toInsert = [];
+
                 for(var i = 0; i < instructions.length; i++){
                     toInsert.push(instructions[i]);
                 }
 
+                var sendOut = {"instructions" : toInsert, "time" : time};
+
                 ref.child(title).child("ingredients").set(JSON.stringify(toInsert));
-                res.status(200).send(instructions);
-                resolve(JSON.parse(body));
+                ref.child(title).child("time").set(time);
+                res.status(200).send(sendOut);
+                resolve(body);
             }
         });
     });

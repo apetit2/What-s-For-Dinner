@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -19,10 +21,8 @@ import android.widget.LinearLayout;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
     private IngredientAdapter iAdapter;
     private ImageButton iButton;
     private Button submitButton;
-    private RestCalls restCalls;
 
     /**
      * This initializes the main activity
@@ -79,8 +78,6 @@ public class MainActivity extends AppCompatActivity {
         //this might be replaced later on, might make this happen automatically, but for now, this is fine
         submitButton = findViewById(R.id.submitButton);
 
-        //gets are rest calls that we make to my outside server
-        restCalls = new RestCalls();
 
         /**
          * adds a click listener to the submit button, this essentially calls the rest api to get potential recipes for the user
@@ -95,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
                 //reinitialize the list, in case user made a new search
                 listData.clear();
                 //get the results of the restcall response
-                JSONArray object = restCalls.getIngredients(ings);
+                JSONArray object = RestCalls.getIngredients(ings);
 
                 //if the array of JSON objects is not null, lets add it to our list, we will modify this later on
                 if(object != null){
@@ -121,6 +118,17 @@ public class MainActivity extends AppCompatActivity {
 
         //updates the ingredients recycler view
         updateUI();
+    }
+
+    /**
+     * Adds menu to this activity, although not sure if we want this
+     * @param menu
+     * @return
+     */
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
     }
 
     /**

@@ -1,6 +1,6 @@
 const router = require('express').Router();
-const insertNewMenu = require('./insertNewMenu');
+const getItem = require('./getitem');
 
-router.post('/insertmenuitem', insertNewMenu);
+router.post('/item', getItem);
 
 module.exports = router;
