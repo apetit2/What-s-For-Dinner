@@ -27,7 +27,7 @@
                 android:layout_centerVertical="true"
                 android:fontFamily="sans-serif-condensed"
                 android:gravity="center"
-                android:text="TextView"
+                android:text="@string/default_string"
                 android:textColor="@color/brownish"
                 android:textSize="20sp" />
         </RelativeLayout>

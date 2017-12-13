@@ -1,14 +1,21 @@
 package wpi.whatsfordinner;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -25,11 +32,49 @@ public class RecipeActivity extends AppCompatActivity {
     private RecipeAdapter rAdapter;
     private RecyclerView recipeRecyclerView;
     private LinearLayout linLayout;
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+    private ActionBarDrawerToggle mDrawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recipe_activity);
+
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.app_name, R.string.app_name){
+            @Override
+            public void onDrawerClosed(View drawerView){
+
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView){
+
+            }
+        };
+
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
+        mDrawerToggle.syncState();
+
+        mDrawerList = findViewById(R.id.left_drawer);
+        mDrawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                switch(position){
+                    case 0:
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intent);
+                        break;
+                    default:
+                        mDrawerLayout.closeDrawer(GravityCompat.START);
+                }
+            }
+        });
 
         recipes = getIntent().getStringArrayListExtra("recipeList");
 
@@ -38,6 +83,27 @@ public class RecipeActivity extends AppCompatActivity {
         recipeRecyclerView.setLayoutManager(new LinearLayoutManager(linLayout.getContext(), LinearLayoutManager.VERTICAL, false));
 
         updateUI();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        if(mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState){
+        super.onPostCreate(savedInstanceState);
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     /**

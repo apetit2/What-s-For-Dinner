@@ -1,22 +1,32 @@
 package wpi.whatsfordinner;
 
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.os.Build;
 import android.os.StrictMode;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,12 +38,15 @@ public class MainActivity extends AppCompatActivity {
 
     private ArrayList<String> ingredients = new ArrayList<>();
     private ArrayList<String> listData = new ArrayList<>();
-    private RecyclerView ingredientRecyclerView;
-    private LinearLayout linLayout;
     private IngredientAdapter iAdapter;
-    private ImageButton iButton;
-    private Button submitButton;
     private RestCalls restCalls = new RestCalls();
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private RelativeLayout clickableRelative;
+    private FrameLayout blurLayout;
+    private PopupWindow popUpWindow;
+    private RecyclerView popupRecyclerView;
 
     /**
      * This initializes the main activity
@@ -45,94 +58,177 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
-        RestCalls rest = new RestCalls();
-        rest.getURL();
+        //make this not blacked out
+        blurLayout = findViewById(R.id.main_activity_blur);
+        blurLayout.getForeground().setAlpha(0);
 
-        //disable strictmode
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.app_name, R.string.app_name){
+            @Override
+            public void onDrawerClosed(View drawerView){
+
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView){
+
+            }
+        };
+
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
+        mDrawerToggle.syncState();
+
+        mDrawerList = findViewById(R.id.left_drawer);
+        mDrawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                System.out.println("position: " + position);
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+            }
+        });
 
         //initialize so we have one card up
         ingredients.add("");
 
-        //get the recyclerview from the user interface
-        ingredientRecyclerView = findViewById(R.id.recycler_view);
-
-        //get the linear layout that holds the recycler view, need this to set the linear layout manager of the recyclerview
-        linLayout = findViewById(R.id.lin_layout);
-
-        //set the layout manager of the recyclerview so that it actually works
-        ingredientRecyclerView.setLayoutManager(new LinearLayoutManager(linLayout.getContext(), LinearLayoutManager.VERTICAL, false));
-
-        //image button, is used to add more ingredients that we then submit a search for
-        iButton = findViewById(R.id.imageButton);
-
-        /**
-         * Gets a click listener for the image button, essentially adds a new item to the array of ingredients which places another box into the recyclerview
-         */
-        iButton.setOnClickListener(new View.OnClickListener() {
+        clickableRelative = findViewById(R.id.clickable_relative);
+        clickableRelative.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                ingredients.add("");
-                System.out.println(Arrays.toString(ingredients.toArray()));
+
+                //we want to blur out the background -- do this first so there is no delay
+                blurLayout.getForeground().setAlpha(220);
+
+                //initialize a new instance of LayoutInflater service
+                LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+
+                //inflate the custom layout/view
+                View customView = inflater.inflate(R.layout.main_popup, null);
+
+                //set up the popup window
+                popUpWindow = new PopupWindow(
+                        customView,
+                        RelativeLayout.LayoutParams.WRAP_CONTENT,
+                        RelativeLayout.LayoutParams.WRAP_CONTENT
+                );
+
+                //set the recyclerview
+                popupRecyclerView = customView.findViewById(R.id.popup_recycler);
+                RelativeLayout layout = customView.findViewById(R.id.main_r_relative_layout);
+                popupRecyclerView.setLayoutManager(new LinearLayoutManager(layout.getContext(), LinearLayoutManager.VERTICAL, false));
+
+                IngredientAdapter popUpAdapter = new IngredientAdapter(ingredients);
+                popupRecyclerView.setAdapter(popUpAdapter);
+
+                //need to check the SDK version
+                if(Build.VERSION.SDK_INT>=21){
+                    popUpWindow.setElevation(5.0f);
+                }
+
+                //this is the button we use to close the popup
+                Button cancelButton = customView.findViewById(R.id.cancel_button);
+
+                //this is the title of the popup view
+                TextView textView = customView.findViewById(R.id.main_popup_text);
+
+                //set the title name
+                textView.setText("List your ingredients");
+
+                //this is the plus image button
+                ImageButton iButton = customView.findViewById(R.id.plus_sign);
+                iButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ingredients.add("");
+                        updateUI();
+                    }
+                });
+
+                //this is the submit button
+                Button sButton = customView.findViewById(R.id.go_button);
+                sButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //convert the arraylist of ingredients to a simple array of strings that can be processed by the rest api
+                        String[] ings = new String[ingredients.size()];
+                        ings = ingredients.toArray(ings);
+
+                        //reinitialize the list, in case user made a new search
+                        listData.clear();
+                        //get the results of the restcall response
+                        JSONArray object = restCalls.getIngredients(ings);
+
+                        //if the array of JSON objects is not null, lets add it to our list, we will modify this later on
+                        if(object != null){
+                            try {
+                                for(int i = 0; i < object.length(); i++){
+                                    listData.add(object.getString(i));
+                                }
+                            } catch (JSONException e){
+                                System.out.println(e.getMessage());
+                            }
+                        }
+
+                        //print out this list, just to check
+                        System.out.println(Arrays.toString(listData.toArray()));
+
+                        //alright, we are going to go to the next activity to let the user select which recipe they
+                        //want to view
+                        Intent intent = new Intent(getApplicationContext(), RecipeActivity.class);
+                        intent.putStringArrayListExtra("recipeList", listData);
+                        startActivity(intent);
+                    }
+                });
+
+                //when we press the close button we should close the popup
+                cancelButton.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View view){
+                        ingredients.clear();
+                        ingredients.add("");
+                        iAdapter = null;
+                        blurLayout.getForeground().setAlpha(0);
+                        popUpWindow.dismiss();
+                    }
+                });
+
+                //show the equipment popup on the main relative view
+                RelativeLayout mainLayout = findViewById(R.id.main_r);
+
+                popUpWindow.setFocusable(true);
+                popUpWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
+
                 updateUI();
             }
         });
 
-        //this might be replaced later on, might make this happen automatically, but for now, this is fine
-        submitButton = findViewById(R.id.submitButton);
-
-
-        /**
-         * adds a click listener to the submit button, this essentially calls the rest api to get potential recipes for the user
-         */
-        submitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v){
-                //convert the arraylist of ingredients to a simple array of strings that can be processed by the rest api
-                String[] ings = new String[ingredients.size()];
-                ings = ingredients.toArray(ings);
-
-                //reinitialize the list, in case user made a new search
-                listData.clear();
-                //get the results of the restcall response
-                JSONArray object = restCalls.getIngredients(ings);
-
-                //if the array of JSON objects is not null, lets add it to our list, we will modify this later on
-                if(object != null){
-                    try {
-                        for(int i = 0; i < object.length(); i++){
-                            listData.add(object.getString(i));
-                        }
-                    } catch (JSONException e){
-                        System.out.println(e.getMessage());
-                    }
-                }
-
-                //print out this list, just to check
-                System.out.println(Arrays.toString(listData.toArray()));
-
-                //alright, we are going to go to the next activity to let the user select which recipe they
-                //want to view
-                Intent intent = new Intent(getApplicationContext(), RecipeActivity.class);
-                intent.putStringArrayListExtra("recipeList", listData);
-                startActivity(intent);
-            }
-        });
-
-        //updates the ingredients recycler view
-        updateUI();
+        //disable strictmode
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
     }
 
-    /**
-     * Adds menu to this activity, although not sure if we want this
-     * @param menu
-     * @return
-     */
-    public boolean onCreateOptionsMenu(Menu menu){
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
-        return true;
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        if(mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState){
+        super.onPostCreate(savedInstanceState);
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     /**
@@ -142,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
         //if we have yet to set our adapter, than we should now
         if (iAdapter == null){
             iAdapter = new IngredientAdapter(ingredients);
-            ingredientRecyclerView.setAdapter(iAdapter);
+            popupRecyclerView.setAdapter(iAdapter);
         } else {
             //otherwise just update the adapter's data and notify the change
             iAdapter.setAdapterIngredients(ingredients);

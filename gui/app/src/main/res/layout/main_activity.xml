@@ -1,46 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start">
 
-    <LinearLayout
-        android:id="@+id/lin_layout"
-        android:layout_width="300dp"
-        android:layout_height="150dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:background="@android:color/darker_gray">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:foreground="@drawable/blur"
+        android:id="@+id/main_activity_blur">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view"
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
-    </LinearLayout>
+            tools:context=".MainActivity"
+            android:id="@+id/main_r">
 
-    <ImageButton
-        android:id="@+id/imageButton"
-        android:layout_width="83dp"
-        android:layout_height="75dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="36dp"
-        android:layout_toEndOf="@+id/lin_layout"
-        android:background="@drawable/rounded_corners"
-        android:padding="1dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/plus" />
+            <ImageView
+                android:id="@+id/main_imageview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/crepe" />
 
-    <Button
-        android:id="@+id/submitButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/lin_layout"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="57dp"
-        android:text="Submit" />
-</RelativeLayout>
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="34dp"
+                android:backgroundTint="@android:color/white"
+                android:fontFamily="serif"
+                android:shadowColor="@android:color/black"
+                android:shadowRadius="2"
+                android:text="@string/main"
+                android:textColor="@color/colorAccent"
+                android:textSize="35sp" />
+
+            <RelativeLayout
+                android:id="@+id/clickable_relative"
+                android:layout_width="375dp"
+                android:layout_height="60dp"
+                android:layout_below="@+id/textView3"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="36dp"
+                android:background="@android:color/white">
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="65dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignTop="@+id/textView4"
+                    android:layout_marginStart="12dp"
+                    app:srcCompat="@drawable/search" />
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="275dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="98dp"
+                    android:gravity="center"
+                    android:text="@string/ingredients"
+                    android:textSize="20sp" />
+            </RelativeLayout>
+
+        </RelativeLayout>
+    </FrameLayout>
+
+    <ListView
+        android:id="@+id/left_drawer"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/morewhite"
+        android:choiceMode="singleChoice"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
+        android:entries="@array/menuitems" />
+
+</android.support.v4.widget.DrawerLayout>

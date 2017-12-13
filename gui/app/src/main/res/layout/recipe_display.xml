@@ -1,89 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/main_menu"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:foreground="@drawable/blur">
-
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main_relative_layout"
-    android:layout_width="match_parent" android:layout_height="match_parent">
-
-    <ImageView
-        android:id="@+id/recipeImage"
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start">
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/main_menu"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/recipeText"
-        app:srcCompat="@android:drawable/screen_background_light_transparent" />
+        android:layout_height="match_parent"
+        android:foreground="@drawable/blur">
 
-    <TextView
-        android:id="@+id/recipeText"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:gravity="center"
-        android:text="TextView"
-        android:textColor="@color/brownish"
-        android:textSize="20sp" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="75dp"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/recipeImage"
-        android:id="@+id/relativeLayout3">
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/main_relative_layout"
+            android:layout_width="match_parent" android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/time_duration"
-            android:layout_width="175dp"
-            android:layout_height="25dp"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="11dp"
-            android:gravity="center"
-            android:text="TextView"
-            android:textColor="@color/brownish"
-            android:textSize="15sp" />
+            <ImageView
+                android:id="@+id/recipeImage"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/recipeText"
+                app:srcCompat="@android:drawable/screen_background_light_transparent" />
 
-        <Button
-            android:id="@+id/what_ingredients"
-            android:layout_width="150dp"
-            android:layout_height="37dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginEnd="20dp"
-            android:text="Ingredients" />
+            <TextView
+                android:id="@+id/recipeText"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:text="@string/default_string"
+                android:textColor="@color/brownish"
+                android:textSize="20sp" />
 
-        <Button
-            android:id="@+id/equipment_button"
-            android:layout_width="150dp"
-            android:layout_height="37dp"
-            android:layout_alignStart="@+id/what_ingredients"
-            android:layout_below="@+id/what_ingredients"
-            android:text="Equipment" />
-    </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/recipeImage"
+                android:id="@+id/relativeLayout3">
 
-    <RelativeLayout
-        android:id="@+id/r_layout"
-        android:layout_width="match_parent"
-        android:layout_height="187dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/relativeLayout3">
+                <TextView
+                    android:id="@+id/time_duration"
+                    android:layout_width="175dp"
+                    android:layout_height="25dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="11dp"
+                    android:gravity="center"
+                    android:text="@string/default_string"
+                    android:textColor="@color/brownish"
+                    android:textSize="15sp" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/step_recyclerview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
-    </RelativeLayout>
+                <Button
+                    android:id="@+id/what_ingredients"
+                    android:layout_width="150dp"
+                    android:layout_height="37dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginEnd="20dp"
+                    android:text="@string/more_ingredients" />
 
-</RelativeLayout>
-</FrameLayout>
+                <Button
+                    android:id="@+id/equipment_button"
+                    android:layout_width="150dp"
+                    android:layout_height="37dp"
+                    android:layout_alignStart="@+id/what_ingredients"
+                    android:layout_below="@+id/what_ingredients"
+                    android:text="@string/equipment" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/r_layout"
+                android:layout_width="match_parent"
+                android:layout_height="187dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/relativeLayout3">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/step_recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
+            </RelativeLayout>
+
+        </RelativeLayout>
+    </FrameLayout>
+
+    <ListView
+        android:id="@+id/left_drawer"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/morewhite"
+        android:choiceMode="singleChoice"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
+        android:entries="@array/menuitems" />
+
+</android.support.v4.widget.DrawerLayout>

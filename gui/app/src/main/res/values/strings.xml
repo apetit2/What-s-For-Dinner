@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">What\'s For Dinner</string>
+    <string-array name="menuitems">
+        <item>Home</item>
+        <item>My Diet</item>
+        <item>Settings</item>
+        <item>About</item>
+    </string-array>
+    <string name="default_string">default</string>
+    <string name="dismiss">Close</string>
+    <string name="main">What Are We Eating?</string>
+    <string name="ingredients">Enter Some Ingredients</string>
+    <string name="go">Let\'s Go!</string>
+    <string name="cancel">Cancel</string>
+    <string name="more_ingredients">Ingredients</string>
+    <string name="equipment">Equipment</string>
 </resources>
