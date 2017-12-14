@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/equipment_relative"
+        android:layout_width="300dp"
+        android:layout_height="250dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="80dp"
+        android:background="@color/lesswhite">
+
+        <TextView
+            android:id="@+id/equipment_text"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:background="@color/morewhite"
+            android:gravity="center"
+            android:text="@string/problem_text"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/equipment_dismiss"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:text="@string/dismiss" />
+
+        <TextView
+            android:id="@+id/problem_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/equipment_text"
+            android:layout_marginStart="23dp"
+            android:layout_marginTop="18dp"
+            android:text="@string/default_string" />
+
+    </RelativeLayout>
+</RelativeLayout>

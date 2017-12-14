@@ -5,6 +5,7 @@
         <item>My Diet</item>
         <item>Settings</item>
         <item>About</item>
+        <item>Log Out</item>
     </string-array>
     <string name="default_string">default</string>
     <string name="dismiss">Close</string>
@@ -14,4 +15,15 @@
     <string name="cancel">Cancel</string>
     <string name="more_ingredients">Ingredients</string>
     <string name="equipment">Equipment</string>
+    <string name="title">What\'s For Dinner?</string>
+    <string name="name">Name</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="account">Make Account</string>
+    <string name="previous_user">Already a member? Login here!</string>
+    <string name="welcome_back">Welcome Back!</string>
+    <string name="login_now">Login</string>
+    <string name="forgot_user_info">Forgot username or password?</string>
+    <string name="problem">*</string>
+    <string name="problem_text">Oops...</string>
 </resources>

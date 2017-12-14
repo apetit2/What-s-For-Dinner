@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,6 +24,7 @@ import cz.msebera.android.httpclient.client.entity.UrlEncodedFormEntity;
 import cz.msebera.android.httpclient.client.methods.HttpPost;
 import cz.msebera.android.httpclient.impl.client.HttpClientBuilder;
 import cz.msebera.android.httpclient.message.BasicNameValuePair;
+import cz.msebera.android.httpclient.protocol.HTTP;
 import cz.msebera.android.httpclient.util.EntityUtils;
 
 public class RestCalls {
@@ -183,5 +185,80 @@ public class RestCalls {
 
         //need to do some more error checking
         return null;
+    }
+
+    public JSONObject userSignUp(String name, String email, String password){
+        System.out.println(url);
+        try{
+            //set up the post request with url + /service/data/signup
+            HttpPost post = new HttpPost(url + "/service/data/signup");
+            HttpClient httpClient = HttpClientBuilder.create().build();
+
+            //set up request parameters
+            List<NameValuePair> nameValuePairs = new ArrayList<>();
+
+            nameValuePairs.add(new BasicNameValuePair("name", name));
+            nameValuePairs.add(new BasicNameValuePair("email", email));
+            nameValuePairs.add(new BasicNameValuePair("password", password));
+
+            post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+            //execute the request
+            HttpResponse response = httpClient.execute(post);
+
+            //if the response is good from the server, we should check it
+            int status = response.getStatusLine().getStatusCode();
+            if(status == 200){
+                HttpEntity entity = response.getEntity();
+                String data = EntityUtils.toString(entity);
+
+                JSONObject object = new JSONObject(data);
+                return object;
+            }
+        } catch (IOException e){
+            e.printStackTrace();
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public String userLogin(String name, String email, String password){
+        try {
+            //set up the post request with url + /service/data/login
+            HttpPost post = new HttpPost(url + "/service/data/login");
+            HttpClient httpClient = HttpClientBuilder.create().build();
+
+            //set up request parameters
+            List<NameValuePair> nameValuePairs = new ArrayList<>();
+
+            nameValuePairs.add(new BasicNameValuePair("name", name));
+            nameValuePairs.add(new BasicNameValuePair("email", email));
+            nameValuePairs.add(new BasicNameValuePair("password", password));
+
+            post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+            //execute the request
+            HttpResponse response = httpClient.execute(post);
+
+            //if the response is good from the server, we should check it
+            int status = response.getStatusLine().getStatusCode();
+            if(status == 200){
+                HttpEntity entity = response.getEntity();
+                String data = EntityUtils.toString(entity);
+
+                JSONObject object = new JSONObject(data);
+                String result = object.getString("status");
+
+                return result;
+            }
+        } catch (IOException e){
+            e.printStackTrace();
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        return "error";
     }
 }

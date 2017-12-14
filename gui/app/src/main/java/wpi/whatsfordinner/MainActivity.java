@@ -1,9 +1,11 @@
 package wpi.whatsfordinner;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -86,8 +88,34 @@ public class MainActivity extends AppCompatActivity {
         mDrawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                System.out.println("position: " + position);
-                mDrawerLayout.closeDrawer(GravityCompat.START);
+                switch(position){
+                    case 0:
+                        //This is the case where we select home on the home screen, don't need to worry about doing anything
+                        break;
+                    case 1:
+                        //This is the case where we select my diet -- if user has not logged in yet, we should redirect them to log in
+                        //otherwise we send them directly to their fitness page
+                        break;
+                    case 2:
+                        //This is the settings page -- we should allow users to filter search options here
+                        break;
+                    case 3:
+                        //This is the about page -- don't think anyone will ever even click on this
+                        break;
+                    case 4:
+                        //logout case
+                        SharedPreferences preferences = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+                        SharedPreferences.Editor edit = preferences.edit();
+                        edit.putBoolean("logged_in", false);
+                        edit.commit();
+
+                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                        startActivity(intent);
+                        break;
+                    default:
+                        mDrawerLayout.closeDrawer(GravityCompat.START);
+                        break;
+                }
             }
         });
 

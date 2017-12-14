@@ -1,6 +1,7 @@
 package wpi.whatsfordinner;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
@@ -69,6 +70,16 @@ public class RecipeActivity extends AppCompatActivity {
                     case 0:
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intent);
+                        break;
+                    case 4:
+                        //logout case
+                        SharedPreferences preferences = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+                        SharedPreferences.Editor edit = preferences.edit();
+                        edit.putBoolean("logged_in", false);
+                        edit.commit();
+
+                        Intent intent2 = new Intent(getApplicationContext(), LoginActivity.class);
+                        startActivity(intent2);
                         break;
                     default:
                         mDrawerLayout.closeDrawer(GravityCompat.START);
