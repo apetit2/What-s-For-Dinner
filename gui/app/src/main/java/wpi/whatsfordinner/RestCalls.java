@@ -4,6 +4,7 @@ package wpi.whatsfordinner;
  * Created by apand on 12/8/2017.
  */
 
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
 import org.json.JSONArray;
@@ -65,7 +66,7 @@ public class RestCalls {
      * @param ingredients {String[]} -- a list of all ingredients the user is searching recipes for
      * @return
      */
-    public JSONArray getIngredients(String[] ingredients) {
+    public JSONArray getIngredients(String[] ingredients, int amount) {
         //Make a post request to my server to determine 20 recipes that best match the user's search
         try {
             //set up a post request to the url: url + "/service/api/ingredients"
@@ -76,6 +77,8 @@ public class RestCalls {
             //request body set up, should have list of ingredients that we send out
             //this will in turn return a response of recipes
             List<NameValuePair> nameValuePairs = new ArrayList<>(); //add size to arraylist
+
+            nameValuePairs.add(new BasicNameValuePair("amount", "" + amount));
 
             for(String ingredient: ingredients){
                 nameValuePairs.add(new BasicNameValuePair("ingredients[]", ingredient));
@@ -187,6 +190,13 @@ public class RestCalls {
         return null;
     }
 
+    /**
+     * Sign the user up for our service
+     * @param name
+     * @param email
+     * @param password
+     * @return
+     */
     public JSONObject userSignUp(String name, String email, String password){
         System.out.println(url);
         try{
@@ -224,7 +234,14 @@ public class RestCalls {
         return null;
     }
 
-    public String userLogin(String name, String email, String password){
+    /**
+     * Log the user into our service
+     * @param name
+     * @param email
+     * @param password
+     * @return
+     */
+    public JSONObject userLogin(String name, String email, String password){
         try {
             //set up the post request with url + /service/data/login
             HttpPost post = new HttpPost(url + "/service/data/login");
@@ -249,9 +266,8 @@ public class RestCalls {
                 String data = EntityUtils.toString(entity);
 
                 JSONObject object = new JSONObject(data);
-                String result = object.getString("status");
 
-                return result;
+                return object;
             }
         } catch (IOException e){
             e.printStackTrace();
@@ -259,6 +275,6 @@ public class RestCalls {
             e.printStackTrace();
         }
 
-        return "error";
+        return null;
     }
 }

@@ -40,6 +40,18 @@
             android:theme="@android:style/Theme.NoTitleBar">
         </activity>
 
+        <activity android:name=".AboutActivity"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity android:name=".DietActivity"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity android:name=".SettingsActivity"
+            android:screenOrientation="portrait">
+        </activity>
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

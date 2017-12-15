@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.StrictMode;
-import android.preference.PreferenceManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -66,9 +65,11 @@ public class MainActivity extends AppCompatActivity {
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
+        //set up for drawerlayout for menu items
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        // this sets up a drawerlayout for the menu
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.app_name, R.string.app_name){
             @Override
             public void onDrawerClosed(View drawerView){
@@ -81,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+        //add event listener to menu button at the top so that the drawer opens when pressed
         mDrawerLayout.addDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
 
@@ -91,16 +93,22 @@ public class MainActivity extends AppCompatActivity {
                 switch(position){
                     case 0:
                         //This is the case where we select home on the home screen, don't need to worry about doing anything
+                        //but we are already here
                         break;
                     case 1:
                         //This is the case where we select my diet -- if user has not logged in yet, we should redirect them to log in
-                        //otherwise we send them directly to their fitness page
+                        Intent intent4 = new Intent(getApplicationContext(), DietActivity.class);
+                        startActivity(intent4);
                         break;
                     case 2:
                         //This is the settings page -- we should allow users to filter search options here
+                        Intent intent3 = new Intent(getApplicationContext(), SettingsActivity.class);
+                        startActivity(intent3);
                         break;
                     case 3:
                         //This is the about page -- don't think anyone will ever even click on this
+                        Intent intent2 = new Intent(getApplicationContext(), AboutActivity.class);
+                        startActivity(intent2);
                         break;
                     case 4:
                         //logout case
@@ -187,7 +195,9 @@ public class MainActivity extends AppCompatActivity {
                         //reinitialize the list, in case user made a new search
                         listData.clear();
                         //get the results of the restcall response
-                        JSONArray object = restCalls.getIngredients(ings);
+
+                        SharedPreferences preferences = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+                        JSONArray object = restCalls.getIngredients(ings, preferences.getInt("default_num_recipes", 20));
 
                         //if the array of JSON objects is not null, lets add it to our list, we will modify this later on
                         if(object != null){
@@ -237,6 +247,8 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
     }
+
+    //more methods for slide out menu
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){

@@ -13,7 +13,7 @@ const serviceAccount = require('../../file.json');
  * @param {Object} req Request Object
  */
 
-function initialize(ingredients, res, req) {
+function initialize(ingredients, amount, res, req) {
     //check to make sure some ingredients were actually entered, otherwise we don't need to look up
 
     var urlBaseString = 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?fillIngredients=false&ingredients=';
@@ -27,10 +27,10 @@ function initialize(ingredients, res, req) {
         }
     }
 
-    urlBaseString = urlBaseString + '&limitLicense=false&number=20&ranking=1';
+    urlBaseString = urlBaseString + '&limitLicense=false&number='+ amount +'&ranking=1';
 
     console.log(urlBaseString);
-    //send request to API
+    //setting headers for the get request
     var options = {
         url: urlBaseString,
         headers: {
@@ -39,17 +39,19 @@ function initialize(ingredients, res, req) {
         }
     };
 
+    //make the get request to the API
     return new Promise((resolve, reject) => {
         //async job
         request.get(options, (err, resp, body) => {
             if(err) {
+                //if the api is down, we have internal server error
                 res.status(500).end()
                 reject(err);
             } else {
-
-                //replace the below code with any data transaction we deem necessary
+                //returns a list of n number of recipes
                 var menu = JSON.parse(body);
 
+                //return this list of recipes to the client
                 res.status(200).send(JSON.parse(body));
                 resolve(JSON.parse(body));
             }
@@ -66,8 +68,9 @@ function initialize(ingredients, res, req) {
 
 module.exports = (req, res) => {
     var ingredients = req.body.ingredients;
+    var amount = req.body.amount;
 
     //send out a request to the api
-    var recipe = initialize(ingredients, res, req);
+    var recipe = initialize(ingredients, amount, res, req);
 
 };

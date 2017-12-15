@@ -49,6 +49,7 @@ public class LoginActivity extends Activity {
         blurLayout = findViewById(R.id.main_activity_blur);
         blurLayout.getForeground().setAlpha(0);
 
+        //get the user preferences
         preferences = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
 
         //if user was previously logged in, no need to log in again -- go directly to the main activity
@@ -57,6 +58,7 @@ public class LoginActivity extends Activity {
             startActivity(intent);
         }
 
+        //load in views for updates
         name = findViewById(R.id.name_text);
         email = findViewById(R.id.email_text);
         password = findViewById(R.id.password_text);
@@ -65,6 +67,8 @@ public class LoginActivity extends Activity {
         problemTwo = findViewById(R.id.email_problem);
         problemThree = findViewById(R.id.password_problem);
 
+        //add a click listener to the create account button
+        //that adds a user if able, and then logs them in
         createAccount = findViewById(R.id.account_button);
         createAccount.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,6 +99,7 @@ public class LoginActivity extends Activity {
             }
         });
 
+        //if the user selects this text view, we should redirect them to the login page
         alreadyMember = findViewById(R.id.member_login);
         alreadyMember.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -111,13 +116,21 @@ public class LoginActivity extends Activity {
     public class SignupTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... t) {
+            //perform a sign up request
             JSONObject result = restCalls.userSignUp(name.getText().toString(), email.getText().toString(), password.getText().toString());
             if(result != null){
                 try{
+                    //check to see if the user was added
                     String status = result.getString("status");
                     if (status.equals("success")){
+                        //if the user was added update the uid to shared preferences
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putString("uid", result.getString("uid"));
+                        editor.commit();
+                        //return success
                         return "success";
                     } else {
+                        //else figure out what the problem was and return it
                         return result.getString("error");
                     }
                 } catch (JSONException e){
@@ -131,14 +144,17 @@ public class LoginActivity extends Activity {
         @Override
         protected void onPostExecute(String result){
             if (result.equals("success")){
+                //if the user was signed in, we should update the display_name, email, and logged_in values and start the main activity
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putBoolean("logged_in", true);
                 editor.putString("display_name", name.getText().toString());
                 editor.putString("email", email.getText().toString());
+                editor.putInt("default_num_recipes", 20);
                 editor.commit();
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
             } else {
+                //else alert the user of what the problem was with signing them up for the service
                 System.out.println(result);
 
                 shouldDisplayPopup = true;

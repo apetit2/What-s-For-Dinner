@@ -16,6 +16,9 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by apand on 12/13/2017.
  */
@@ -78,9 +81,19 @@ public class MemberLogin extends Activity {
     public class LoginTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... t) {
-            String result = restCalls.userLogin(name.getText().toString(), email.getText().toString(), password.getText().toString());
-            return result;
-
+            JSONObject result = restCalls.userLogin(name.getText().toString(), email.getText().toString(), password.getText().toString());
+            try {
+                String status = result.getString("status");
+                if(status.equals("success")){
+                    String uid = result.getString("uid");
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString("uid", uid);
+                }
+                return status;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return "error";
         }
 
         @Override

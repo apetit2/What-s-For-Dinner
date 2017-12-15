@@ -42,6 +42,7 @@ public class RecipeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recipe_activity);
 
+        //sets up the menu drawer
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -62,14 +63,31 @@ public class RecipeActivity extends AppCompatActivity {
         mDrawerLayout.addDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
 
+        //click listener for menu items on left slide out drawer
         mDrawerList = findViewById(R.id.left_drawer);
         mDrawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch(position){
                     case 0:
+                        //we want to go home
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intent);
+                        break;
+                    case 1:
+                        //This is the case where we select my diet -- if user has not logged in yet, we should redirect them to log in
+                        Intent intent4 = new Intent(getApplicationContext(), DietActivity.class);
+                        startActivity(intent4);
+                        break;
+                    case 2:
+                        //This is the settings page -- we should allow users to filter search options here
+                        Intent intent3 = new Intent(getApplicationContext(), SettingsActivity.class);
+                        startActivity(intent3);
+                        break;
+                    case 3:
+                        //This is the about page -- don't think anyone will ever even click on this
+                        Intent intent2 = new Intent(getApplicationContext(), AboutActivity.class);
+                        startActivity(intent2);
                         break;
                     case 4:
                         //logout case
@@ -78,17 +96,20 @@ public class RecipeActivity extends AppCompatActivity {
                         edit.putBoolean("logged_in", false);
                         edit.commit();
 
-                        Intent intent2 = new Intent(getApplicationContext(), LoginActivity.class);
-                        startActivity(intent2);
+                        Intent intent5 = new Intent(getApplicationContext(), LoginActivity.class);
+                        startActivity(intent5);
                         break;
                     default:
                         mDrawerLayout.closeDrawer(GravityCompat.START);
+                        break;
                 }
             }
         });
 
+        //get the list of recipes found from querying the API in the last activity
         recipes = getIntent().getStringArrayListExtra("recipeList");
 
+        //set up the recycler view to display each recipe
         recipeRecyclerView = findViewById(R.id.recipe_recycler_view);
         linLayout = findViewById(R.id.recipe_lin_layout);
         recipeRecyclerView.setLayoutManager(new LinearLayoutManager(linLayout.getContext(), LinearLayoutManager.VERTICAL, false));
@@ -96,6 +117,7 @@ public class RecipeActivity extends AppCompatActivity {
         updateUI();
     }
 
+    //menu setup functions
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         if(mDrawerToggle.onOptionsItemSelected(item)) {
